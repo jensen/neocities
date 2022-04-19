@@ -1,0 +1,166 @@
+[
+  {
+    "name": "Area51",
+    "description": "Science fiction and fantasy, conspiracy theories"
+  },
+  {
+    "name": "Athens",
+    "description": "Teaching, education, reading, writing, and philosophy"
+  },
+  {
+    "name": "Augusta",
+    "description": "Golf"
+  },
+  {
+    "name": "Baja",
+    "description": "Off-road SUVs and adventure travel"
+  },
+  {
+    "name": "BourbonStreet",
+    "description": "Jazz music, Cajun food, New Orleans and Southern United States topics"
+  },
+  {
+    "name": "Broadway",
+    "description": "Theater and performing arts"
+  },
+  {
+    "name": "CapeCanaveral",
+    "description": "Science, technology, engineering, mathematics, and aviation"
+  },
+  {
+    "name": "CapitolHill",
+    "description": "Politics and government"
+  },
+  {
+    "name": "CollegePark",
+    "description": "University life"
+  },
+  {
+    "name": "Colosseum",
+    "description": "Athletics and sports"
+  },
+  {
+    "name": "EnchantedForest",
+    "description": "Topics of interest to children"
+  },
+  {
+    "name": "Eureka",
+    "description": "Small business and home offices"
+  },
+  {
+    "name": "FashionAvenue",
+    "description": "Fashion"
+  },
+  {
+    "name": "Heartland",
+    "description": "Parenting and family"
+  },
+  {
+    "name": "Hollywood",
+    "description": "Films and actors"
+  },
+  {
+    "name": "HotSprings",
+    "description": "Health and fitness"
+  },
+  {
+    "name": "MadisonAvenue",
+    "description": "Advertising"
+  },
+  {
+    "name": "MotorCity",
+    "description": "Automobiles and racing and dodge cars"
+  },
+  {
+    "name": "NapaValley",
+    "description": "Wine, gastronomy"
+  },
+  {
+    "name": "Nashville",
+    "description": "Country music"
+  },
+  {
+    "name": "LeftBank",
+    "description": "Romance, poetry, and the arts"
+  },
+  {
+    "name": "Pentagon",
+    "description": "Military"
+  },
+  {
+    "name": "Petsburgh",
+    "description": "Petsburgh"
+  },
+  {
+    "name": "PicketFence",
+    "description": "Home improvement and real estate"
+  },
+  {
+    "name": "Pipeline",
+    "description": "Extreme sports"
+  },
+  {
+    "name": "RainForest",
+    "description": "Conservation"
+  },
+  {
+    "name": "RodeoDrive",
+    "description": "Shopping and luxury lifestyles"
+  },
+  {
+    "name": "ResearchTriangle",
+    "description": "Research and development, technology"
+  },
+  {
+    "name": "SiliconValley",
+    "description": "Computers, hardware, programming, and technology"
+  },
+  {
+    "name": "SoHo",
+    "description": "Art and writing"
+  },
+  {
+    "name": "SouthBeach",
+    "description": "A 'high-style hot spot for hanging out, meeting and greeting, seeing and being seen.'"
+  },
+  {
+    "name": "SunsetStrip",
+    "description": "Music such as blues, grunge, punk rock, and rock 'n roll"
+  },
+  {
+    "name": "TheTropics",
+    "description": "Travel and vacations"
+  },
+  {
+    "name": "TelevisionCity",
+    "description": "Television"
+  },
+  {
+    "name": "TimesSquare",
+    "description": "Computer and video games"
+  },
+  {
+    "name": "Tokyo",
+    "description": "Far East-related topics, including anime"
+  },
+  {
+    "name": "Vienna",
+    "description": "Ballet, classical music, and opera"
+  },
+  {
+    "name": "WallStreet",
+    "description": "Business and finance"
+  },
+  {
+    "name": "Wellesley",
+    "description": "Women-related topics"
+  },
+  {
+    "name": "WestHollywood",
+    "description": "Gay, lesbian, bisexual, and transgender topics"
+  },
+  {
+    "name": "Yosemite",
+    "description": "Outdoor recreation including climbing, hiking, rafting, and skiing"
+  }
+]

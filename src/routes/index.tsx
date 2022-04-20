@@ -4,10 +4,10 @@ import db from "../services/db.server";
 import hoods from "../../data/hoods.json";
 
 export const loader: LoaderFunction = async () => {
-  const result = await db.query("select * from users");
+  const result = await db.query("select * from owners");
   console.log(result);
 
-  return { hoods };
+  return { hoods: [] };
 };
 
 const Hood = (props) => {

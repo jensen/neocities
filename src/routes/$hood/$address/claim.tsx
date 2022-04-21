@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import db from "../../../services/db.server";
 import { login } from "../../../utils/session.server";
+import storage from "../../../services/storage.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const body = await request.formData();
@@ -12,7 +13,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const user = await login(email, password);
 
-  await db(
+  const [address] = await db(
     `
     with h as (
       select id from hoods where hoods.name = $2
@@ -21,9 +22,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     set owner_id = $1
     from h 
     where hood_id = h.id and addresses.number = $3
+    returning addresses.id
     `,
     [user.id, params.hood, params.address]
   );
+
+  try {
+    await storage.upload(`${address.id}/index.html`, "");
+  } catch (error) {
+    throw new Response("Unable to create file.", {
+      status: 500,
+    });
+  }
 
   return redirect(`/${params.hood}/${params.address}`);
 };

@@ -13,6 +13,12 @@ export const loader: LoaderFunction = async ({ params }) => {
     [params.hood]
   );
 
+  if (addresses.length === 0) {
+    throw new Response("Cannot find hood", {
+      status: 404,
+    });
+  }
+
   return { addresses };
 };
 

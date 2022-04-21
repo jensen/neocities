@@ -1,8 +1,13 @@
-const { Client } = require("pg");
-const client = new Client({
+const { Pool } = require("pg");
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-client.connect();
+export default async function query(...args) {
+  const client = await pool.connect();
+  const result = await client.query(...args);
 
-export default client;
+  client.release();
+
+  return result.rows;
+}

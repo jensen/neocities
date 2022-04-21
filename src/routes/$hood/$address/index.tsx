@@ -1,16 +1,69 @@
-import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, Link, useParams } from "@remix-run/react";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import storage from "../../../services/storage.server";
+import db from "../../../services/db.server";
 
-export const loader: LoaderFunction = () => {
-  return {};
+export const action: ActionFunction = async ({ request, params }) => {
+  const body = await request.formData();
+
+  const filename = body.get("filename");
+
+  const [address] = await db(
+    `
+    select addresses.id
+    from addresses join hoods on hoods.id = addresses.hood_id
+    where hoods.name = $1 and addresses.number = $2
+    `,
+    [params.hood, params.address]
+  );
+
+  const files = await storage.list(address.id);
+
+  if (files?.includes(`${filename}.html`)) {
+    throw new Response("File is duplicate.", {
+      status: 400,
+    });
+  }
+
+  try {
+    await storage.upload(`${address.id}/${filename}.html`, "");
+  } catch (error) {
+    throw new Response("Unable to create file.", {
+      status: 500,
+    });
+  }
+
+  return redirect(`/${params.hood}/${params.address}/${filename}.html/edit`);
 };
 
-export default function NewSite() {
-  const { hood, address } = useParams();
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const [address] = await db(
+    `
+    select addresses.id, addresses.owner_id as owner
+    from addresses join hoods on hoods.id = addresses.hood_id
+    where hoods.name = $1 and addresses.number = $2
+    `,
+    [params.hood, params.address]
+  );
+
+  if (!address.owner) {
+    return redirect(`/${params.hood}/${params.address}/claim`);
+  }
+
+  const content = await storage.download(`${address.id}/index.html`);
+
+  return {
+    content,
+  };
+};
+
+export default function Address() {
+  const { content } = useLoaderData();
 
   return (
-    <ul>
-      {hood} {address}
-    </ul>
+    <section>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    </section>
   );
 }

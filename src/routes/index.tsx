@@ -1,19 +1,17 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import db from "../services/db.server";
-import hoods from "../../data/hoods.json";
 
 export const loader: LoaderFunction = async () => {
-  const result = await db.query("select * from owners");
-  console.log(result);
+  const hoods = await db(`select * from hoods`);
 
-  return { hoods: [] };
+  return { hoods };
 };
 
 const Hood = (props) => {
   return (
     <li>
-      <Link to={`/${props.name}/new`}>{props.name}</Link>
+      <Link to={`/${props.name}`}>{props.name}</Link>
       {props.description}
     </li>
   );
@@ -25,7 +23,7 @@ export default function NewSite() {
   return (
     <ul>
       {hoods.map((hood) => (
-        <Hood {...hood} />
+        <Hood key={hood.name} {...hood} />
       ))}
     </ul>
   );

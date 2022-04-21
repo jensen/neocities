@@ -25,7 +25,7 @@ create table addresses (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
 
-  number integer not null,
+  number varchar(64) not null,
 
   hood_id uuid not null,
   constraint hood_id foreign key(hood_id) references hoods(id) on delete cascade,

@@ -14,6 +14,18 @@ const storageConfig = {
   },
 };
 
+export const stream = async (key, stream) => {
+  const client = new S3Client(storageConfig);
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: process.env.STORAGE_BUCKET,
+      Key: key,
+      Body: stream,
+    })
+  );
+};
+
 export const upload = async (key, content) => {
   const client = new S3Client(storageConfig);
 
@@ -60,6 +72,7 @@ export const list = async (key) => {
 };
 
 export default {
+  stream,
   upload,
   download,
   list,

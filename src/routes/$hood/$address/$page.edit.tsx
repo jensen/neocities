@@ -98,6 +98,14 @@ export default function Editor() {
         <textarea rows={25} name="content" defaultValue={content} />
         <button type="submit">Save</button>
       </Form>
+      <Form
+        method="post"
+        action={`/${hood}/${address}/upload`}
+        encType="multipart/form-data"
+      >
+        <input type="file" name="files" multiple />
+        <button type="submit">Upload</button>
+      </Form>
     </section>
   );
 }

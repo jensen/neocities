@@ -5,6 +5,7 @@ import {
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
 
+console.log(process.env);
 const storageConfig = {
   endpoint: process.env.STORAGE_ENDPOINT,
   region: process.env.STORAGE_REGION,

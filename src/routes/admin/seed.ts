@@ -3,12 +3,12 @@ import hoods from "../../../data/hoods.json";
 
 export const loader = async () => {
   for (const hood of hoods) {
-    const {
-      rows: [{ id }],
-    } = await db(
+    const [{ id }] = await db(
       `insert into hoods (name, description) values ($1, $2) returning id`,
       [hood.name, hood.description]
     );
+
+    console.log(id);
 
     const values = Array(10000)
       .fill(null)

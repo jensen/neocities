@@ -47,6 +47,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     [params.hood, params.address]
   );
 
+  if (!address) {
+    throw new Response("Cannot find address", {
+      status: 404,
+    });
+  }
+
   if (!address.owner) {
     return redirect(`/${params.hood}/${params.address}/claim`);
   }

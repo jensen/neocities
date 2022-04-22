@@ -44,7 +44,7 @@ export const loader: LoaderFunction = () => {
 
 export default function Claim() {
   return (
-    <Form method="post">
+    <Form method="post" reloadDocument>
       <label>
         Email
         <input type="email" name="email" />

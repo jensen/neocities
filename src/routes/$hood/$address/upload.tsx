@@ -36,5 +36,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await unstable_parseMultipartFormData(request, uploadHandler);
 
-  return redirect(`/`);
+  return redirect(`/${params.hood}/${params.address}`);
 };

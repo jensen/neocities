@@ -94,7 +94,7 @@ export default function Editor() {
         <input type="text" name="filename" />
         <button type="submit">Create</button>
       </Form>
-      <Form method="post">
+      <Form method="post" reloadDocument>
         <textarea rows={25} name="content" defaultValue={content} />
         <button type="submit">Save</button>
       </Form>
@@ -102,6 +102,7 @@ export default function Editor() {
         method="post"
         action={`/${hood}/${address}/upload`}
         encType="multipart/form-data"
+        reloadDocument
       >
         <input type="file" name="files" multiple />
         <button type="submit">Upload</button>

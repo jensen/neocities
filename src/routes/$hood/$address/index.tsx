@@ -1,6 +1,5 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import storage from "../../../services/storage.server";
 import db from "../../../services/db.server";
 
@@ -59,17 +58,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const content = await storage.download(`${address.id}/index.html`);
 
-  return {
-    content,
-  };
+  return new Response(content, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html",
+    },
+  });
 };
-
-export default function Address() {
-  const { content } = useLoaderData();
-
-  return (
-    <section>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
-    </section>
-  );
-}

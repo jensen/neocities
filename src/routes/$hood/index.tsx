@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   );
 
   if (addresses.length === 0) {
-    throw new Response("Cannot find hood", {
+    throw new Response("Cannot find address", {
       status: 404,
     });
   }

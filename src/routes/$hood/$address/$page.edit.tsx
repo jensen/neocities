@@ -95,7 +95,12 @@ export default function Editor() {
         <button type="submit">Create</button>
       </Form>
       <Form method="post" reloadDocument>
-        <textarea rows={25} name="content" defaultValue={content} />
+        <textarea
+          key={Math.random()}
+          rows={25}
+          name="content"
+          defaultValue={content}
+        />
         <button type="submit">Save</button>
       </Form>
       <Form

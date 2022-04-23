@@ -37,6 +37,12 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  if (isNaN(Number(params.address))) {
+    throw new Response("Cannot find address", {
+      status: 404,
+    });
+  }
+
   const [address] = await db(
     `
     select addresses.id, addresses.owner_id as owner

@@ -1,9 +1,9 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import db from "../../../services/db.server";
-import storage from "../../../services/storage.server";
-import { userSession } from "src/services/session.server";
+import db from "~/services/db.server";
+import storage from "~/services/storage.server";
+import { userSession } from "~/services/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await userSession(request);

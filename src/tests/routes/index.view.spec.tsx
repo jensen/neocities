@@ -7,7 +7,7 @@ import type { FormProps, LinkProps } from "@remix-run/react";
 import { vi } from "vitest";
 import React from "react";
 import { render } from "@testing-library/react";
-import View from "../../routes/";
+import View from "~/routes/";
 import { useLoaderData } from "@remix-run/react";
 
 const useLoaderDataMock = useLoaderData as unknown as SpyInstance;

@@ -4,14 +4,14 @@
 
 import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
-import { loader } from "../../routes/";
+import { loader } from "~/routes/";
 
-import db from "../../services/db.server";
+import db from "~/services/db.server";
 
 const dbMock = db as unknown as SpyInstance;
 
 describe("/", () => {
-  vi.mock("../../services/db.server.ts", () => ({
+  vi.mock("~/services/db.server.ts", () => ({
     default: vi.fn(),
   }));
 

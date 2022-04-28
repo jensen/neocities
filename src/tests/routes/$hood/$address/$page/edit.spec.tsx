@@ -4,18 +4,12 @@
 
 import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
-import {
-  loader,
-  action,
-} from "../../../../../routes/$hood/$address/$page/edit";
+import { loader, action } from "~/routes/$hood/$address/$page/edit";
 
-import {
-  getSession,
-  commitSession,
-} from "../../../../../services/session.server";
+import { getSession, commitSession } from "~/services/session.server";
 
-import db from "../../../../../services/db.server";
-import storage from "../../../../../services/storage.server";
+import db from "~/services/db.server";
+import storage from "~/services/storage.server";
 
 const dbMock = db as unknown as SpyInstance;
 const storageMock = {
@@ -33,11 +27,11 @@ describe("/$hood/$address/$page/edit", () => {
     cookie = await commitSession(session);
   });
 
-  vi.mock("../../../../../services/db.server.ts", () => ({
+  vi.mock("~/services/db.server.ts", () => ({
     default: vi.fn(),
   }));
 
-  vi.mock("../../../../../services/storage.server.ts", () => ({
+  vi.mock("~/services/storage.server.ts", () => ({
     default: {
       download: vi.fn(),
       upload: vi.fn(),

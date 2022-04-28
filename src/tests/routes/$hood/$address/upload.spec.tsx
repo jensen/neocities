@@ -5,11 +5,11 @@
 import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
 import { Readable } from "stream";
-import { action } from "../../../../routes/$hood/$address/upload";
-import { getSession, commitSession } from "../../../../services/session.server";
+import { action } from "~/routes/$hood/$address/upload";
+import { getSession, commitSession } from "~/services/session.server";
 
-import db from "../../../../services/db.server";
-import storage from "../../../../services/storage.server";
+import db from "~/services/db.server";
+import storage from "~/services/storage.server";
 
 const dbMock = db as unknown as SpyInstance;
 const storageMock = {
@@ -25,11 +25,11 @@ describe("/$hood/$address/upload", () => {
     cookie = await commitSession(session);
   });
 
-  vi.mock("../../../../services/db.server.ts", () => ({
+  vi.mock("~/services/db.server.ts", () => ({
     default: vi.fn(),
   }));
 
-  vi.mock("../../../../services/storage.server.ts", () => ({
+  vi.mock("~/services/storage.server.ts", () => ({
     default: {
       stream: vi.fn(),
     },
@@ -124,6 +124,42 @@ describe("/$hood/$address/upload", () => {
           type: "text/html",
         }),
         "index.html"
+      );
+
+      const request = new Request("/Page/1000/upload", {
+        method: "post",
+        body: formData,
+        headers: {
+          Cookie: cookie,
+        },
+      });
+
+      try {
+        await action({
+          request,
+          params: {
+            hood: "Page",
+            address: "1000",
+          },
+          context: {},
+        });
+        throw new Error();
+      } catch (response: any) {
+        expect(response.status).toBe(400);
+      }
+    });
+
+    it("throws a 400 response when the files are not of the correct type", async () => {
+      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      storageMock.stream.mockResolvedValueOnce(undefined);
+
+      const formData = new FormData();
+
+      formData.append(
+        "files",
+        new File(["<h1>Upload Test</h1>"], "index.html", {
+          type: "html/text",
+        })
       );
 
       const request = new Request("/Page/1000/upload", {

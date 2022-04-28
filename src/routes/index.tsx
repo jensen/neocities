@@ -1,9 +1,9 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import db from "../services/db.server";
+import db from "~/services/db.server";
 
-import styles from "../styles/hoods.css";
+import styles from "~/styles/hoods.css";
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 

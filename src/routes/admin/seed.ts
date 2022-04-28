@@ -1,4 +1,4 @@
-import db from "../../services/db.server";
+import db from "~/services/db.server";
 import hoods from "../../../data/hoods.json";
 
 export const loader = async () => {

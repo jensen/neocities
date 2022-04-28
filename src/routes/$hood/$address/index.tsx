@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import storage from "../../../services/storage.server";
-import db from "../../../services/db.server";
+import storage from "~/services/storage.server";
+import db from "~/services/db.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const body = await request.formData();

@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import db from "../../services/db.server";
-import create from "../../services/session.server";
+import db from "~/services/db.server";
+import create from "~/services/session.server";
 
 export let action: ActionFunction = async ({ request, params, context }) => {
   return redirect("/");

@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import db from "../../services/db.server";
-import AddressGrid from "../../components/AddressGrid";
+import db from "~/services/db.server";
+import AddressGrid from "~/components/AddressGrid";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);

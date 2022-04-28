@@ -7,7 +7,7 @@ import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
 import React from "react";
 import { render } from "@testing-library/react";
-import View from "../../../../../routes/$hood/$address/$page/edit";
+import View from "~/routes/$hood/$address/$page/edit";
 import { useParams, useLoaderData } from "@remix-run/react";
 
 const useParamsMock = useParams as unknown as SpyInstance;

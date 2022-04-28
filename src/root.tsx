@@ -36,7 +36,7 @@ export function links() {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "neocities",
+  title: "neo.cities",
   viewport: "width=device-width,initial-scale=1",
 });
 

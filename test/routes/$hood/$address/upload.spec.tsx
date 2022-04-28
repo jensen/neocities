@@ -41,15 +41,13 @@ describe("/$hood/$address/upload", () => {
         method: "post",
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
           params: {},
           context: {},
-        });
-      } catch (response: any) {
-        expect(response.status).toBe(401);
-      }
+        })
+      ).toThrowResponse(401);
     });
 
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
@@ -62,15 +60,13 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
           params: {},
           context: {},
-        });
-      } catch (response: any) {
-        expect(response.status).toBe(403);
-      }
+        })
+      ).toThrowResponse(403);
     });
 
     it("redirects the user when they upload content", async () => {
@@ -134,19 +130,13 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
-          params: {
-            hood: "Page",
-            address: "1000",
-          },
+          params: {},
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(400);
-      }
+        })
+      ).toThrowResponse(400);
     });
 
     it("throws a 400 response when the files are not of the correct type", async () => {
@@ -170,19 +160,13 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
-          params: {
-            hood: "Page",
-            address: "1000",
-          },
+          params: {},
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(400);
-      }
+        })
+      ).toThrowResponse(400);
     });
   });
 });

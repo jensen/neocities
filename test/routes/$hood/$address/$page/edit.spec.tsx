@@ -45,16 +45,13 @@ describe("/$hood/$address/$page/edit", () => {
         method: "post",
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
           params: {},
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(401);
-      }
+        })
+      ).toThrowResponse(401);
     });
 
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
@@ -90,15 +87,13 @@ describe("/$hood/$address/$page/edit", () => {
         body,
       });
 
-      try {
-        await action({
+      expect(() =>
+        action({
           request,
           params: { hood: "Page", address: "1000", page: "index.html" },
           context: {},
-        });
-      } catch (response: any) {
-        expect(response.status).toBe(500);
-      }
+        })
+      ).toThrowResponse(500);
     });
 
     describe("redirects the user when they update the content", () => {
@@ -162,16 +157,13 @@ describe("/$hood/$address/$page/edit", () => {
         method: "get",
       });
 
-      try {
-        await loader({
+      expect(() =>
+        loader({
           request,
           params: {},
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(401);
-      }
+        })
+      ).toThrowResponse(401);
     });
 
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
@@ -182,16 +174,13 @@ describe("/$hood/$address/$page/edit", () => {
         headers: { cookie },
       });
 
-      try {
-        await loader({
+      expect(() =>
+        loader({
           request,
           params: {},
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(403);
-      }
+        })
+      ).toThrowResponse(403);
     });
 
     it("returns a 200 response when the user owns the page", async () => {

@@ -90,7 +90,7 @@ describe("/$hood/$address/claim", () => {
         ).toThrowResponse(500);
       });
 
-      it("it redirects on successful upload", async () => {
+      it("redirects on successful upload", async () => {
         dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
         storageMock.upload.mockResolvedValueOnce(undefined);
 

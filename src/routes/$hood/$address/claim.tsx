@@ -1,18 +1,14 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import db from "~/services/db.server";
 import storage from "~/services/storage.server";
-import { userSession } from "~/services/session.server";
+import { userSession, error } from "~/services/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await userSession(request);
 
-  if (!user.id) {
-    throw new Response("Must be authenticated", {
-      status: 401,
-    });
-  }
+  error[401](!user.id);
 
   const [address] = await db(
     `
@@ -22,11 +18,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     update addresses
     set owner_id = $1
     from h 
-    where hood_id = h.id and addresses.number = $3
+    where hood_id = h.id and addresses.number = $3 and owner_id is null
     returning addresses.id
     `,
     [user.id, params.hood, params.address]
   );
+
+  error[403](!address);
 
   try {
     await storage.upload(`${address.id}/index.html`, "");
@@ -36,11 +34,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  return redirect(`/${params.hood}/${params.address}`);
-};
-
-export const loader: LoaderFunction = () => {
-  return {};
+  return redirect(`/${params.hood}/${params.address}/`);
 };
 
 export default function Claim() {

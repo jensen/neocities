@@ -73,7 +73,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function Editor() {
-  const { hood, address } = useParams();
+  const { hood, address, page } = useParams();
   const { files, content } = useLoaderData();
 
   const transition = useTransition();
@@ -100,7 +100,7 @@ export default function Editor() {
       </ul>
       <Form
         method="post"
-        action={`/${hood}/${address}?index`}
+        action={`/${hood}/${address}/${page}?index`}
         replace
         ref={formRef}
       >

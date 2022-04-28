@@ -4,10 +4,19 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: "Source Sans Pro", sans-serif;
 }
 
 a {
   color: red;
+}
+
+a:hover {
+  color: darkred;
 }

@@ -1,11 +1,13 @@
 import type { MetaFunction } from "@remix-run/node";
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react";
 
 import Header from "./components/Header";
@@ -25,7 +27,7 @@ export function links() {
     },
     {
       rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap",
+      href: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap",
     },
     { rel: "stylesheet", href: reset },
     { rel: "stylesheet", href: variables },
@@ -48,13 +50,61 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Header />
-        <main className="content">
-          <Outlet />
+        <main className="layout">
+          <Header />
+          <section className="content">
+            <Outlet />
+          </section>
         </main>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+export const Error = () => {
+  const caught = useCatch();
+
+  const errors: { [key: number]: string } = {
+    401: "You are not logged in.",
+    403: "You do not own this address.",
+  };
+
+  const keys: number[] = Object.keys(errors).map(Number);
+
+  return (
+    <article className="error__container">
+      <p className="error__message">
+        {keys.includes(caught.status) === false
+          ? "Unknown error"
+          : errors[caught.status]}
+        <br />
+        <Link to="/" className="error__link">
+          Home
+        </Link>
+      </p>
+    </article>
+  );
+};
+
+export function CatchBoundary() {
+  return (
+    <html>
+      <head>
+        <title>Error</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <main className="layout">
+          <Header />
+          <section className="content">
+            <Error />
+          </section>
+        </main>
+        <Scripts />
       </body>
     </html>
   );

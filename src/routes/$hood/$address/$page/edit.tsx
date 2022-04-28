@@ -8,22 +8,29 @@ import {
   useParams,
   useTransition,
 } from "@remix-run/react";
-import storage from "../../../services/storage.server";
-import db from "../../../services/db.server";
+import db from "../../../../services/db.server";
+import storage from "../../../../services/storage.server";
+import { userSession, error } from "../../../../services/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const body = await request.formData();
+  const user = await userSession(request);
 
-  const content = body.get("content") || "";
+  error[401](!user.id);
 
   const [address] = await db(
     `
     select addresses.id, addresses.owner_id as owner
     from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2
+    where hoods.name = $1 and addresses.number = $2 and owner_id = $3
     `,
-    [params.hood, params.address]
+    [params.hood, params.address, user.id]
   );
+
+  error[403](!address);
+
+  const body = await request.formData();
+
+  const content = body.get("content") || "";
 
   try {
     await storage.upload(`${address.id}/${params.page}`, content);
@@ -40,15 +47,21 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/${params.hood}/${params.address}/${params.page}`);
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const user = await userSession(request);
+
+  error[401](!user.id);
+
   const [address] = await db(
     `
     select addresses.id, addresses.owner_id as owner
     from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2
+    where hoods.name = $1 and addresses.number = $2 and owner_id = $3
     `,
-    [params.hood, params.address]
+    [params.hood, params.address, user.id]
   );
+
+  error[403](!address);
 
   const content = await storage.download(`${address.id}/${params.page}`);
   const files = await storage.list(`${address.id}`);

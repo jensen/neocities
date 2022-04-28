@@ -1,11 +1,16 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import db from "../services/db.server";
+
+import styles from "../styles/hoods.css";
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const loader: LoaderFunction = async () => {
   const hoods = await db(`select * from hoods`);
 
-  return { hoods };
+  return json({ hoods });
 };
 
 const Hood = (props) => {
@@ -17,7 +22,7 @@ const Hood = (props) => {
   );
 };
 
-export default function NewSite() {
+export default function Hoods() {
   const { hoods } = useLoaderData();
 
   return (

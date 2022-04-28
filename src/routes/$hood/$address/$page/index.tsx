@@ -1,8 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import storage from "../../../services/storage.server";
-import db from "../../../services/db.server";
+import storage from "../../../../services/storage.server";
+import db from "../../../../services/db.server";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const [address] = await db(

@@ -1,0 +1,13 @@
+:root {
+  --discord-blue-color: 234.9, 85.6%;
+  --discord-blue-l: 64.7%;
+  --discord-blue: hsl(var(--discord-blue-color), var(--discord-blue-l));
+  --discord-blue-lighter: hsl(
+    var(--discord-blue-color),
+    calc(var(--discord-blue-l) + 10%)
+  );
+  --discord-blue-darker: hsl(
+    var(--discord-blue-color),
+    calc(var(--discord-blue-l) - 10%)
+  );
+}

@@ -125,3 +125,13 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+hr {
+  border-style: solid;
+}
+button {
+  font-family: inherit;
+}

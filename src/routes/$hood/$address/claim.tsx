@@ -2,16 +2,17 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import db from "../../../services/db.server";
-import { login } from "../../../utils/session.server";
 import storage from "../../../services/storage.server";
+import { userSession } from "src/services/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const body = await request.formData();
+  const user = await userSession(request);
 
-  const email = body.get("email");
-  const password = body.get("password");
-
-  const user = await login(email, password);
+  if (!user.id) {
+    throw new Response("Must be authenticated", {
+      status: 401,
+    });
+  }
 
   const [address] = await db(
     `
@@ -45,14 +46,6 @@ export const loader: LoaderFunction = () => {
 export default function Claim() {
   return (
     <Form method="post" reloadDocument>
-      <label>
-        Email
-        <input type="email" name="email" />
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" />
-      </label>
       <button type="submit">Claim</button>
     </Form>
   );

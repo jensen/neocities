@@ -8,7 +8,10 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import Header from "./components/Header";
+
 import reset from "./styles/reset.css";
+import variables from "./styles/variables.css";
 import shared from "./styles/shared.css";
 import main from "./styles/main.css";
 
@@ -25,6 +28,7 @@ export function links() {
       href: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap",
     },
     { rel: "stylesheet", href: reset },
+    { rel: "stylesheet", href: variables },
     { rel: "stylesheet", href: shared },
     { rel: "stylesheet", href: main },
   ];
@@ -44,7 +48,10 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <Header />
+        <main className="content">
+          <Outlet />
+        </main>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

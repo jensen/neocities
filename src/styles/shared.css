@@ -43,6 +43,8 @@
 .header {
   padding: 0.5rem 0.25rem;
   border-bottom: 1px solid red;
+  display: flex;
+  justify-content: space-between;
 }
 
 .content {

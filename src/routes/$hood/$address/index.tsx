@@ -2,6 +2,8 @@ import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import storage from "~/services/storage.server";
 import { getAddress } from "~/services/db.server";
+import { userSession } from "~/services/session.server";
+import { addTargetTop } from "~/utils/convert";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (isNaN(Number(params.address))) {
@@ -22,9 +24,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return redirect(`/${params.hood}/${params.address}/claim`);
   }
 
+  const user = await userSession(request);
+  const url = new URL(request.url);
+  const raw = Boolean(url.searchParams.get("raw") || false);
+
+  if (raw === false && user.id === address.owner) {
+    return redirect(`/${params.hood}/${params.address}/preview`);
+  }
+
   const content = await storage.download(`${address.id}/index.html`);
 
-  return new Response(content, {
+  const preview = user.id === address.owner ? addTargetTop(content) : content;
+
+  return new Response(preview, {
     status: 200,
     headers: {
       "Content-Type": "text/html",

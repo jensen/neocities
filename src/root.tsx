@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useMatches,
 } from "@remix-run/react";
 
 import Header from "./components/Header";

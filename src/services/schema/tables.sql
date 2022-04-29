@@ -1,6 +1,8 @@
+drop table if exists users cascade;
 drop table if exists owners cascade;
 drop table if exists hoods cascade;
-drop table if exists games cascade;
+drop table if exists addresses cascade;
+
 
 create table users (
   id uuid default extensions.uuid_generate_v4() primary key,

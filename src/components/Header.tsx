@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header className="header">
       <Link to="/" className="header__logo">
-        neocities
+        neo.cities
       </Link>
       <div>
         {isLoggedIn === false && <DiscordLogin />}

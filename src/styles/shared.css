@@ -14,25 +14,29 @@
 }
 
 .status-tag--available {
-  background-color: green;
-}
-
-.status-tag--available:hover {
-  background-color: forestgreen;
+  background-color: var(--available-green);
 }
 
 .status-tag--claimed {
-  background-color: red;
+  background-color: var(--claimed-red);
 }
 
 .status-tag--offset {
 }
 
 .header {
-  padding: 0.5rem 0.25rem;
-  border-bottom: 1px solid red;
+  padding: 0.5rem 1rem;
+  border-bottom: 4px solid;
+  border-color: var(--primary-red);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.header__logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-red);
 }
 
 .content {
@@ -98,11 +102,11 @@
   font-size: 3rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #b30049;
+  color: var(--primary-red);
 }
 
 .pagination__link:hover {
-  color: #070d0d;
+  color: var(--primary-red-lighter);
 }
 
 .pagination__link--hidden {
@@ -118,4 +122,15 @@
 
 .avatar__placeholder {
   background-color: #e6e6e6;
+}
+
+.edit__button {
+  background-color: var(--primary-red);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.edit__button:hover {
+  background-color: var(--primary-red-lighter);
 }

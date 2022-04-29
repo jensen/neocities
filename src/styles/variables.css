@@ -10,4 +10,19 @@
     var(--discord-blue-color),
     calc(var(--discord-blue-l) - 10%)
   );
+
+  --primary-red-color: 358, 61%;
+  --primary-red-l: 56%;
+  --primary-red: hsl(var(--primary-red-color), var(--primary-red-l));
+  --primary-red-lighter: hsl(
+    var(--primary-red-color),
+    calc(var(--primary-red-l) + 10%)
+  );
+  --primary-red-darker: hsl(
+    var(--primary-red-color),
+    calc(var(--primary-red-l) - 10%)
+  );
+
+  --claimed-red: #f43605;
+  --available-green: #1fa774;
 }

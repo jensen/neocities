@@ -16,7 +16,9 @@ export default function Header() {
 
   return (
     <header className="header">
-      <Link to="/">neocities</Link>
+      <Link to="/" className="header__logo">
+        neocities
+      </Link>
       <div>
         {isLoggedIn === false && <DiscordLogin />}
         {isLoggedIn && isPreview && (
@@ -24,6 +26,7 @@ export default function Header() {
             to={`/${params.hood}/${params.address}/${
               params.page ? params.page + "/" : ""
             }edit`}
+            className="edit__button"
           >
             Edit
           </Link>

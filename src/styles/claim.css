@@ -8,6 +8,6 @@
 
 .claim__button:hover {
   cursor: pointer;
-  color: #42b395;
-  border-color: #42b395;
+  color: var(--primary-red);
+  border-color: var(--primary-red);
 }

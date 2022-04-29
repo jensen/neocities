@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  return redirect(`/${params.hood}/${params.address}/`);
+  return redirect(`/${params.hood}/${params.address}/edit`);
 };
 
 export default function Claim() {

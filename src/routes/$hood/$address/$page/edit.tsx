@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  ActionFunction,
+  LoaderFunction,
+} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import {
   Link,
@@ -11,6 +15,12 @@ import {
 import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
+import UploadIcon from "~/components/icons/UploadIcon";
+
+import styles from "~/styles/editor.css";
+import classNames from "classnames";
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await userSession(request);
@@ -99,42 +109,64 @@ export default function Editor() {
   }, [isAdding]);
 
   return (
-    <section>
-      <div>Editor</div>
-      <ul>
-        {files.map((file) => (
-          <li key={file}>
-            <Link to={`/${hood}/${address}/${file}/edit`}>{file}</Link>
-          </li>
-        ))}
-      </ul>
-      <Form
-        method="post"
-        action={`/${hood}/${address}/${page}?index`}
-        replace
-        ref={formRef}
-      >
-        <input type="text" name="filename" />
-        <button type="submit">Create</button>
-      </Form>
-      <Form method="post" reloadDocument>
-        <textarea
-          key={Math.random()}
-          rows={25}
-          name="content"
-          defaultValue={content}
-        />
-        <button type="submit">Save</button>
-      </Form>
-      <Form
-        method="post"
-        action={`/${hood}/${address}/upload`}
-        encType="multipart/form-data"
-        reloadDocument
-      >
-        <input type="file" name="files" multiple />
-        <button type="submit">Upload</button>
-      </Form>
+    <section className="editor">
+      <aside className="editor__sidebar">
+        <ul className="editor-files__list">
+          {files.map((file) => (
+            <li
+              key={file}
+              className={classNames("editor-files__item", {
+                "editor-files__item--selected": page === file,
+              })}
+            >
+              <Link to={`/${hood}/${address}/${file}/edit`}>{file}</Link>
+            </li>
+          ))}
+        </ul>
+        <Form
+          method="post"
+          action={`/${hood}/${address}/${page}?index`}
+          replace
+          ref={formRef}
+        >
+          <input type="text" name="filename" className="editor-files__input" />
+          <button type="submit" className="editor__button">
+            Create
+          </button>
+        </Form>
+      </aside>
+      <div className="editor__main">
+        <Form
+          method="post"
+          id="editor-content"
+          reloadDocument
+          className="flex-grow"
+        >
+          <textarea
+            key={Math.random()}
+            name="content"
+            defaultValue={content}
+            className="editor-content__textarea"
+          />
+        </Form>
+      </div>
+      <div className="editor__upload">
+        <Form
+          method="post"
+          action={`/${hood}/${address}/upload`}
+          encType="multipart/form-data"
+          reloadDocument
+          className="flex-column flex-column--center"
+        >
+          <label>
+            <UploadIcon className="cursor-pointer" />
+            <input type="file" name="files" multiple className="hidden" />
+          </label>
+          <button type="submit" className="editor__button">
+            Upload
+          </button>
+        </Form>
+      </div>
     </section>
   );
 }

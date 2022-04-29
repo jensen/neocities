@@ -180,7 +180,7 @@ describe("/$hood/$address/$page", () => {
       });
       storageMock.download.mockResolvedValueOnce("<h1>Header</h1>");
 
-      const request = new Request("/Page/1000/index.html");
+      const request = new Request("https://host/Page/1000/index.html");
 
       const response = await loader({
         request,

@@ -1,0 +1,72 @@
+.editor {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.editor__sidebar {
+  width: 14rem;
+  background-color: #f8f8f8;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.editor-files__list {
+}
+
+.editor-files__item {
+  padding: 0.1rem 0;
+  margin-bottom: 0.25rem;
+}
+
+.editor-files__item--selected {
+  color: var(--primary-red);
+}
+
+.editor__main {
+  background-color: #222831;
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.25rem;
+}
+
+.editor-files__input {
+  width: 100%;
+  padding: 0.25rem 0.25rem;
+}
+
+.editor__button {
+  border-radius: 0.25rem;
+  background-color: var(--primary-red);
+  width: 100%;
+  color: white;
+  margin-top: 0.25rem;
+}
+
+.editor__button:hover {
+  background-color: var(--primary-red-lighter);
+  cursor: pointer;
+}
+
+.editor__upload {
+  padding: 1rem 0 1rem 1rem;
+}
+
+.editor-content__textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  color: #a7ff83;
+  background-color: #222831;
+  border: 0;
+  font-size: 1.1rem;
+}
+.editor-content__textarea:focus {
+  outline: none;
+}

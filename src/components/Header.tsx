@@ -14,6 +14,13 @@ export default function Header() {
         match.id === "routes/$hood/$address/$page/preview"
     ).length === 1;
 
+  const isEdit =
+    matches.filter(
+      (match) =>
+        match.id === "routes/$hood/$address/edit" ||
+        match.id === "routes/$hood/$address/$page/edit"
+    ).length === 1;
+
   return (
     <header className="header">
       <Link to="/" className="header__logo">
@@ -26,10 +33,20 @@ export default function Header() {
             to={`/${params.hood}/${params.address}/${
               params.page ? params.page + "/" : ""
             }edit`}
-            className="edit__button"
+            className="header__button"
           >
             Edit
           </Link>
+        )}
+
+        {isEdit && (
+          <button
+            type="submit"
+            form="editor-content"
+            className="header__button"
+          >
+            Save
+          </button>
         )}
       </div>
     </header>

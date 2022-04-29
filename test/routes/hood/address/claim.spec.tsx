@@ -90,7 +90,7 @@ describe("/$hood/$address/claim", () => {
         ).toThrowResponse(500);
       });
 
-      it("redirects on successful upload", async () => {
+      it("redirects on successful save", async () => {
         dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
         storageMock.upload.mockResolvedValueOnce(undefined);
 
@@ -111,7 +111,7 @@ describe("/$hood/$address/claim", () => {
         });
 
         expect(response.status).toBe(302);
-        expect(response.headers.get("Location")).toBe("/Page/1000/");
+        expect(response.headers.get("Location")).toBe("/Page/1000/edit");
       });
     });
   });

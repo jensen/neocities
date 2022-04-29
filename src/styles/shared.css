@@ -21,9 +21,6 @@
   background-color: var(--claimed-red);
 }
 
-.status-tag--offset {
-}
-
 .header {
   padding: 0.5rem 1rem;
   border-bottom: 4px solid;
@@ -37,6 +34,17 @@
   font-size: 2rem;
   font-weight: 700;
   color: var(--primary-red);
+}
+
+.header__button {
+  background-color: var(--primary-red);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.header__button:hover {
+  background-color: var(--primary-red-lighter);
 }
 
 .content {
@@ -124,13 +132,23 @@
   background-color: #e6e6e6;
 }
 
-.edit__button {
-  background-color: var(--primary-red);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+.flex-grow {
+  flex-grow: 1;
 }
 
-.edit__button:hover {
-  background-color: var(--primary-red-lighter);
+.hidden {
+  display: none;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-column--center {
+  align-items: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

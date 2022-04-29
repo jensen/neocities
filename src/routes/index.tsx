@@ -15,9 +15,11 @@ export const loader: LoaderFunction = async () => {
 
 const Hood = (props) => {
   return (
-    <li>
-      <Link to={`/${props.name}`}>{props.name}</Link>
-      {props.description}
+    <li className="hood-list__item">
+      <Link to={`/${props.name}`} className="hood-list__link">
+        {props.name}
+      </Link>
+      <p className="hood-list__description">{props.description}</p>
     </li>
   );
 };
@@ -26,7 +28,7 @@ export default function Hoods() {
   const { hoods } = useLoaderData();
 
   return (
-    <ul>
+    <ul className="hood-list__container">
       {hoods.map((hood) => (
         <Hood key={hood.name} {...hood} />
       ))}

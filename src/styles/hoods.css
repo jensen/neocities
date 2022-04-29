@@ -1,0 +1,49 @@
+.hood-list__container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.hood-list__item {
+  padding: 0.5rem 1rem;
+  background-color: #0f9b8e;
+  background: rgb(34, 193, 195);
+  background: linear-gradient(
+    180deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(34, 193, 195, 1) 10%,
+    rgba(255, 255, 255, 1) 10%
+  );
+  border-radius: 0.25rem;
+  padding-top: 1rem;
+  border: 1px solid rgb(34, 193, 195);
+}
+
+.hood-list__item:hover {
+  background-color: #14c8b6;
+  background-image: none;
+}
+
+.hood-list__link {
+  display: block;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #d6d6d6;
+}
+
+.hood-list__item:hover .hood-list__link {
+  color: #1a1a1a;
+  border-color: #3a3a3a;
+}
+
+.hood-list__item .hood-list__link:hover {
+  color: #fff;
+}
+
+.hood-list__description {
+  color: #3a3a3a;
+  font-size: 0.825rem;
+}

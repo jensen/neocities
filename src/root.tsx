@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "@remix-run/react";
 
 import Header from "./components/Header";
@@ -16,6 +17,8 @@ import reset from "./styles/reset.css";
 import variables from "./styles/variables.css";
 import shared from "./styles/shared.css";
 import main from "./styles/main.css";
+import { userSession } from "./services/session.server";
+import AuthProvider from "./context/auth";
 
 export function links() {
   return [
@@ -42,7 +45,17 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await userSession(request);
+
+  return {
+    user,
+  };
+};
+
 export default function App() {
+  const { user } = useLoaderData();
+
   return (
     <html lang="en">
       <head>
@@ -51,10 +64,12 @@ export default function App() {
       </head>
       <body>
         <main className="layout">
-          <Header />
-          <section className="content">
-            <Outlet />
-          </section>
+          <AuthProvider user={user}>
+            <Header />
+            <section className="content">
+              <Outlet />
+            </section>
+          </AuthProvider>
         </main>
         <ScrollRestoration />
         <Scripts />

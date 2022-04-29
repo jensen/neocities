@@ -1,7 +1,12 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import db from "~/services/db.server";
 import AddressGrid from "~/components/AddressGrid";
+import classNames from "classnames";
+
+import styles from "~/styles/addresses.css";
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);
@@ -12,15 +17,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const addresses = await db(
     `
-     select addresses.number, addresses.owner_id as owner
+     select
+       addresses.number,
+       addresses.owner_id as owner,
+       owners.avatar as avatar,
+       owners.username as username,
+       users.provider_id as provider_id
      from hoods
      join addresses on addresses.hood_id = hoods.id
+     left join users on users.id = addresses.owner_id
+     left join owners on owners.id = addresses.owner_id
      where hoods.name = $1 and addresses.number > $3
      order by addresses.number
      limit $2
     `,
     [params.hood, limit, cursor]
   );
+
+  console.log(addresses);
 
   if (addresses.length === 0) {
     throw new Response("Cannot find address.", {
@@ -46,13 +60,26 @@ export default function NewSite() {
 
   return (
     <section>
-      <header>
-        {pagination.show.previous && (
-          <Link to={`?page=${pagination.previous}`}>Prev</Link>
-        )}
-        {pagination.show.next && (
-          <Link to={`?page=${pagination.next}`}>Next</Link>
-        )}
+      <header className="pagination">
+        <Link
+          to={`?page=${pagination.previous}`}
+          className={classNames("pagination__link", {
+            "pagination__link--hidden": pagination.show.previous === false,
+          })}
+        >
+          Prev
+        </Link>
+        <h2 className="pagination__status">
+          {addresses[0].number} - {addresses[addresses.length - 1].number}
+        </h2>
+        <Link
+          to={`?page=${pagination.next}`}
+          className={classNames("pagination__link", {
+            "pagination__link--hidden": pagination.show.next === false,
+          })}
+        >
+          Next
+        </Link>
       </header>
       <AddressGrid addresses={addresses} />
     </section>

@@ -1,9 +1,13 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { LinksFunction, ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useParams } from "@remix-run/react";
 import db from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
+
+import styles from "~/styles/claim.css";
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await userSession(request);
@@ -38,9 +42,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Claim() {
+  const params = useParams();
+
   return (
     <Form method="post" reloadDocument>
-      <button type="submit">Claim</button>
+      <button className="claim__button" type="submit">
+        Claim {params.address}
+      </button>
     </Form>
   );
 }

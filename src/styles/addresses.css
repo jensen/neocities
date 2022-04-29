@@ -1,0 +1,49 @@
+.address-grid {
+  display: flex;
+}
+
+.address-grid__column {
+  background-color: #fff;
+  margin-right: 4rem;
+}
+
+.address-grid__column:last-of-type {
+  margin-right: 0;
+}
+
+.address-grid__cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  padding: 1rem;
+}
+
+.address__number {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.address__number--claimed {
+  color: #e6e6e6;
+}
+
+.address__owner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.address__username {
+  color: #1a1a1a;
+  padding: 0.25rem 1rem;
+}
+
+.address__details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

@@ -8,10 +8,13 @@ import { loader, action } from "~/routes/$hood/$address/$page/edit";
 
 import { getSession, commitSession } from "~/services/session.server";
 
-import db from "~/services/db.server";
+import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 
-const dbMock = db as unknown as SpyInstance;
+const dbMock = {
+  getOwnedAddress: getOwnedAddress as unknown as SpyInstance,
+};
+
 const storageMock = {
   download: storage.download as unknown as SpyInstance,
   upload: storage.upload as unknown as SpyInstance,
@@ -28,7 +31,7 @@ describe("/$hood/$address/$page/edit", () => {
   });
 
   vi.mock("~/services/db.server.ts", () => ({
-    default: vi.fn(),
+    getOwnedAddress: vi.fn(),
   }));
 
   vi.mock("~/services/storage.server.ts", () => ({
@@ -45,7 +48,7 @@ describe("/$hood/$address/$page/edit", () => {
         method: "post",
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
           params: {},
@@ -55,27 +58,24 @@ describe("/$hood/$address/$page/edit", () => {
     });
 
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
-      dbMock.mockResolvedValueOnce([]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce(undefined);
 
       const request = new Request("/Page/1000/index.html/edit", {
         method: "post",
         headers: { cookie },
       });
 
-      try {
-        await action({
+      await expect(() =>
+        action({
           request,
-          params: {},
+          params: { hood: "Page", address: "1000", page: "index.html" },
           context: {},
-        });
-        throw new Error();
-      } catch (response: any) {
-        expect(response.status).toBe(403);
-      }
+        })
+      ).toThrowResponse(403);
     });
 
     it("throws a 500 response when the upload is not successful", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
       storageMock.upload.mockRejectedValueOnce(undefined);
 
       const body = new FormData();
@@ -87,7 +87,7 @@ describe("/$hood/$address/$page/edit", () => {
         body,
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
           params: { hood: "Page", address: "1000", page: "index.html" },
@@ -100,7 +100,7 @@ describe("/$hood/$address/$page/edit", () => {
       let body: FormData;
 
       beforeEach(() => {
-        dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+        dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
         storageMock.upload.mockResolvedValueOnce(undefined);
 
         body = new FormData();
@@ -157,7 +157,7 @@ describe("/$hood/$address/$page/edit", () => {
         method: "get",
       });
 
-      expect(() =>
+      await expect(() =>
         loader({
           request,
           params: {},
@@ -167,24 +167,27 @@ describe("/$hood/$address/$page/edit", () => {
     });
 
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
-      dbMock.mockResolvedValueOnce([]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce(undefined);
 
       const request = new Request("/Page/1000/index.html/edit", {
         method: "get",
         headers: { cookie },
       });
 
-      expect(() =>
+      await expect(() =>
         loader({
           request,
-          params: {},
+          params: {
+            hood: "Page",
+            address: "1000",
+          },
           context: {},
         })
       ).toThrowResponse(403);
     });
 
     it("returns a 200 response when the user owns the page", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
       storageMock.download.mockResolvedValueOnce("<h1>Header</h1>");
       storageMock.list.mockResolvedValueOnce(["index.html"]);
 
@@ -196,6 +199,8 @@ describe("/$hood/$address/$page/edit", () => {
       const response = await loader({
         request,
         params: {
+          hood: "Page",
+          address: "1000",
           page: "index.html",
         },
         context: {},

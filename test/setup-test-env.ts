@@ -11,7 +11,7 @@ declare global {
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 expect.extend({
-  async toThrowResponse(received, status) {
+  async toThrowResponse(received, status, message) {
     try {
       await received();
 
@@ -20,6 +20,25 @@ expect.extend({
         pass: false,
       };
     } catch (response: any) {
+      if (response instanceof Response === false) {
+        return {
+          message: () => `expected response to be thrown`,
+          pass: false,
+        };
+      }
+
+      const body = await response.text();
+
+      if (message !== undefined && body !== message) {
+        return {
+          message: () =>
+            `expected response to be thrown with message ${
+              message === "" ? '""' : message
+            } received ${body}`,
+          pass: false,
+        };
+      }
+
       if (response.status !== status) {
         return {
           message: () =>

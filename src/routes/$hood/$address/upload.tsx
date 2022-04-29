@@ -1,6 +1,6 @@
 import type { ActionFunction, UploadHandler } from "@remix-run/node";
 import { unstable_parseMultipartFormData, redirect } from "@remix-run/node";
-import db from "~/services/db.server";
+import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
 
@@ -9,14 +9,19 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   error[401](!user.id);
 
-  const [address] = await db(
-    `
-    select addresses.id, addresses.owner_id as owner
-    from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2 and owner_id = $3
-    `,
-    [params.hood, params.address, user.id]
-  );
+  if (!params.hood) {
+    throw new Response("Must provide 'hood' param.", {
+      status: 400,
+    });
+  }
+
+  if (!params.address) {
+    throw new Response("Must provide 'address' param.", {
+      status: 400,
+    });
+  }
+
+  const address = await getOwnedAddress(params.hood, params.address, user);
 
   error[403](!address);
 
@@ -28,11 +33,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   }) => {
     debugger;
     if (name !== "files") {
-      throw new Error("Name must be 'files'");
+      throw new Error("Name must be 'files'.");
     }
 
     if (mimetype !== "text/html") {
-      throw new Error("Mimetype must be 'text/html'");
+      throw new Error("Mimetype must be 'text/html'.");
     }
 
     await storage.stream(`${address.id}/${filename}`, stream);
@@ -43,7 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   try {
     await unstable_parseMultipartFormData(request, uploadHandler);
   } catch (error) {
-    throw new Response("Incorrect Body", {
+    throw new Response("Could not upload.", {
       status: 400,
     });
   }

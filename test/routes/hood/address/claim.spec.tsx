@@ -23,7 +23,7 @@ describe("/$hood/$address/claim", () => {
         method: "post",
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
           params: {},
@@ -61,7 +61,7 @@ describe("/$hood/$address/claim", () => {
           },
         });
 
-        expect(() =>
+        await expect(() =>
           action({
             request,
             params: {},
@@ -81,7 +81,7 @@ describe("/$hood/$address/claim", () => {
           },
         });
 
-        expect(() =>
+        await expect(() =>
           action({
             request,
             params: {},

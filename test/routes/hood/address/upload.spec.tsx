@@ -8,10 +8,13 @@ import { Readable } from "stream";
 import { action } from "~/routes/$hood/$address/upload";
 import { getSession, commitSession } from "~/services/session.server";
 
-import db from "~/services/db.server";
+import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 
-const dbMock = db as unknown as SpyInstance;
+const dbMock = {
+  getOwnedAddress: getOwnedAddress as unknown as SpyInstance,
+};
+
 const storageMock = {
   stream: storage.stream as unknown as SpyInstance,
 };
@@ -26,7 +29,7 @@ describe("/$hood/$address/upload", () => {
   });
 
   vi.mock("~/services/db.server.ts", () => ({
-    default: vi.fn(),
+    getOwnedAddress: vi.fn(),
   }));
 
   vi.mock("~/services/storage.server.ts", () => ({
@@ -41,7 +44,7 @@ describe("/$hood/$address/upload", () => {
         method: "post",
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
           params: {},
@@ -50,8 +53,48 @@ describe("/$hood/$address/upload", () => {
       ).toThrowResponse(401);
     });
 
+    it("throws a 400 if the hood is not defined", async () => {
+      const request = new Request("/Page/1000/upload", {
+        method: "post",
+        headers: {
+          Cookie: cookie,
+        },
+      });
+
+      await expect(() =>
+        action({
+          request,
+          params: {
+            hood: "",
+            address: "1000",
+          },
+          context: {},
+        })
+      ).toThrowResponse(400, "Must provide 'hood' param.");
+    });
+
+    it("throws a 400 if the hood is not defined", async () => {
+      const request = new Request("/Page/1000/upload", {
+        method: "post",
+        headers: {
+          Cookie: cookie,
+        },
+      });
+
+      await expect(() =>
+        action({
+          request,
+          params: {
+            hood: "Page",
+            address: "",
+          },
+          context: {},
+        })
+      ).toThrowResponse(400, "Must provide 'address' param.");
+    });
+
     it("throws a 403 response when the user has logged in but does not own the page", async () => {
-      dbMock.mockResolvedValueOnce([]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce(undefined);
 
       const request = new Request("/Page/1000/upload", {
         method: "post",
@@ -60,17 +103,20 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
-          params: {},
+          params: {
+            hood: "Page",
+            address: "1000",
+          },
           context: {},
         })
       ).toThrowResponse(403);
     });
 
     it("redirects the user when they upload content", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
       storageMock.stream.mockResolvedValueOnce(undefined);
 
       const formData = new FormData();
@@ -109,7 +155,7 @@ describe("/$hood/$address/upload", () => {
     });
 
     it("throws a 400 response when the files are not named correctly", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
       storageMock.stream.mockResolvedValueOnce(undefined);
 
       const formData = new FormData();
@@ -130,17 +176,17 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
-          params: {},
+          params: { hood: "Page", address: "1000" },
           context: {},
         })
-      ).toThrowResponse(400);
+      ).toThrowResponse(400, "Could not upload.");
     });
 
     it("throws a 400 response when the files are not of the correct type", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+      dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
       storageMock.stream.mockResolvedValueOnce(undefined);
 
       const formData = new FormData();
@@ -160,13 +206,13 @@ describe("/$hood/$address/upload", () => {
         },
       });
 
-      expect(() =>
+      await expect(() =>
         action({
           request,
-          params: {},
+          params: { hood: "Page", address: "1000" },
           context: {},
         })
-      ).toThrowResponse(400);
+      ).toThrowResponse(400, "Could not upload.");
     });
   });
 });

@@ -6,18 +6,20 @@ import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
 import { loader } from "~/routes/$hood/$address";
 
-import db from "~/services/db.server";
+import { getAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 
-const dbMock = db as unknown as SpyInstance;
+const dbMock = {
+  getAddress: getAddress as unknown as SpyInstance,
+};
 const storageMock = {
   download: storage.download as unknown as SpyInstance,
 };
 
 describe("/$hood/$address/", () => {
-  describe(":action", () => {
+  describe(":loader", () => {
     vi.mock("~/services/db.server", () => ({
-      default: vi.fn(),
+      getAddress: vi.fn(),
     }));
 
     vi.mock("~/services/storage.server", () => ({
@@ -29,7 +31,7 @@ describe("/$hood/$address/", () => {
     it("throws a 404 if the address is not a number", async () => {
       const request = new Request("/Page/Address");
 
-      expect(() =>
+      await expect(() =>
         loader({
           request,
           params: {
@@ -42,11 +44,11 @@ describe("/$hood/$address/", () => {
     });
 
     it("throws a 404 if the address is not found", async () => {
-      dbMock.mockResolvedValueOnce([]);
+      dbMock.getAddress.mockResolvedValueOnce(undefined);
 
       const request = new Request("/Page/1000");
 
-      expect(() =>
+      await expect(() =>
         loader({
           request,
           params: {
@@ -59,7 +61,7 @@ describe("/$hood/$address/", () => {
     });
 
     it("redirects to the claim page if address not claimed", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123", owner: null }]);
+      dbMock.getAddress.mockResolvedValueOnce({ id: "abc-123", owner: null });
 
       const request = new Request("/Page/1000");
 
@@ -77,7 +79,10 @@ describe("/$hood/$address/", () => {
     });
 
     it("returns a 200 with the content from the storage download", async () => {
-      dbMock.mockResolvedValueOnce([{ id: "abc-123", owner: "xyz-789" }]);
+      dbMock.getAddress.mockResolvedValueOnce({
+        id: "abc-123",
+        owner: "xyz-789",
+      });
       storageMock.download.mockResolvedValueOnce("<h1>Header</h1>");
 
       const request = new Request("/Page/1000");

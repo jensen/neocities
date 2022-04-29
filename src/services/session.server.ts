@@ -13,7 +13,7 @@ if (cookieSessionKeyB && typeof cookieSessionKeyB !== "string") {
 
 const LENGTH = 604_800;
 
-export const userSession = async (request) => {
+export const userSession = async (request: Request) => {
   const { getSession } = create();
   const cookie = request.headers.get("Cookie");
 
@@ -28,14 +28,14 @@ export const userSession = async (request) => {
 };
 
 export const error = {
-  401: (condition) => {
+  401: (condition: boolean) => {
     if (condition) {
       throw new Response("Unauthorized", {
         status: 401,
       });
     }
   },
-  403: (condition) => {
+  403: (condition: boolean) => {
     if (condition) {
       throw new Response("Forbidden", {
         status: 403,

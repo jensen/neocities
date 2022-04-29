@@ -8,7 +8,7 @@ import {
   useParams,
   useTransition,
 } from "@remix-run/react";
-import db from "~/services/db.server";
+import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
 
@@ -17,14 +17,19 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   error[401](!user.id);
 
-  const [address] = await db(
-    `
-    select addresses.id, addresses.owner_id as owner
-    from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2 and owner_id = $3
-    `,
-    [params.hood, params.address, user.id]
-  );
+  if (!params.hood) {
+    throw new Response("Must provide 'hood' param.", {
+      status: 400,
+    });
+  }
+
+  if (!params.address) {
+    throw new Response("Must provide 'address' param.", {
+      status: 400,
+    });
+  }
+
+  const address = await getOwnedAddress(params.hood, params.address, user);
 
   error[403](!address);
 
@@ -52,14 +57,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   error[401](!user.id);
 
-  const [address] = await db(
-    `
-    select addresses.id, addresses.owner_id as owner
-    from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2 and owner_id = $3
-    `,
-    [params.hood, params.address, user.id]
-  );
+  if (!params.hood) {
+    throw new Response("Must provide 'hood' param.", {
+      status: 400,
+    });
+  }
+
+  if (!params.address) {
+    throw new Response("Must provide 'address' param.", {
+      status: 400,
+    });
+  }
+
+  const address = await getOwnedAddress(params.hood, params.address, user);
 
   error[403](!address);
 

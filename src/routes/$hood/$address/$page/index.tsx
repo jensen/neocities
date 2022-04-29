@@ -1,23 +1,35 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import storage from "~/services/storage.server";
-import db from "~/services/db.server";
+import { getOwnedAddress, getAddress } from "~/services/db.server";
+import { userSession, error } from "~/services/session.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
+  const user = await userSession(request);
+
+  error[401](!user.id);
+
+  if (!params.hood) {
+    throw new Response("Must provide 'hood' param.", {
+      status: 400,
+    });
+  }
+
+  if (!params.address) {
+    throw new Response("Must provide 'address' param.", {
+      status: 400,
+    });
+  }
+
+  const address = await getOwnedAddress(params.hood, params.address, user);
+
+  error[403](!address);
+
+  const files = await storage.list(address.id);
+
   const body = await request.formData();
 
   const filename = body.get("filename");
-
-  const [address] = await db(
-    `
-    select addresses.id
-    from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2
-    `,
-    [params.hood, params.address]
-  );
-
-  const files = await storage.list(address.id);
 
   if (files?.includes(`${filename}.html`)) {
     throw new Response("File is duplicate.", {
@@ -37,14 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const [address] = await db(
-    `
-    select addresses.id, addresses.owner_id as owner
-    from addresses join hoods on hoods.id = addresses.hood_id
-    where hoods.name = $1 and addresses.number = $2
-    `,
-    [params.hood, params.address]
-  );
+  const address = await getAddress(params.hood, params.address);
 
   if (!address.owner) {
     return redirect(`/${params.hood}/${params.address}/claim`);

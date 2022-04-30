@@ -36,8 +36,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       throw new Error("Name must be 'files'.");
     }
 
-    if (mimetype !== "text/html") {
-      throw new Error("Mimetype must be 'text/html'.");
+    if (["text/html", "image/gif", "image/jpeg"].includes(mimetype) === false) {
+      throw new Error(
+        "Mimetype must be 'text/html', 'image/gif', or 'image/jpeg'."
+      );
     }
 
     await storage.stream(`${address.id}/${filename}`, stream);

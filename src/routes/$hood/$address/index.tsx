@@ -32,7 +32,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return redirect(`/${params.hood}/${params.address}/preview`);
   }
 
-  const content = await storage.download(`${address.id}/index.html`);
+  const content: ReadableStream = await storage.download(
+    `${address.id}/index.html`
+  );
 
   const converted = await convertStreamToString(content);
   const preview =

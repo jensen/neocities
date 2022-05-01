@@ -16,6 +16,7 @@ import { getOwnedAddress } from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
 import UploadIcon from "~/components/icons/UploadIcon";
+import { convertStreamToString } from "~/utils/convert";
 
 import styles from "~/styles/editor.css";
 import classNames from "classnames";
@@ -83,11 +84,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   error[403](!address);
 
-  const content = await storage.download(`${address.id}/${params.page}`);
+  const content: ReadableStream = await storage.download(
+    `${address.id}/${params.page}`
+  );
   const files = await storage.list(`${address.id}`);
 
   return {
-    content,
+    content: await convertStreamToString(content),
     files,
   };
 };

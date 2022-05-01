@@ -34,8 +34,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     [params.hood, limit, cursor]
   );
 
-  console.log(addresses);
-
   if (addresses.length === 0) {
     throw new Response("Cannot find address.", {
       status: 404,

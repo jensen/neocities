@@ -1,4 +1,9 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import {
+  ActionFunction,
+  HeadersFunction,
+  json,
+  LoaderFunction,
+} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import storage from "~/services/storage.server";
 import { getOwnedAddress, getAddress } from "~/services/db.server";
@@ -102,6 +107,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       status: 200,
       headers: {
         "Content-Type": "text/html",
+        "Cache-Control": "public, max-age=3600",
       },
     });
   }
@@ -110,6 +116,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     status: 200,
     headers: {
       "Content-Type": mimetype,
+      "Cache-Control": "public, max-age=3600",
     },
   });
 };

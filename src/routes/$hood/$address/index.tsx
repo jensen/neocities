@@ -44,6 +44,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     status: 200,
     headers: {
       "Content-Type": "text/html",
+      "Cache-Control": "public, max-age=3600",
     },
   });
 };

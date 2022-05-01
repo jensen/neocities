@@ -8,12 +8,19 @@ import styles from "~/styles/hoods.css";
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const loader: LoaderFunction = async () => {
-  const hoods = await db(`select * from hoods`);
+  const hoods = await db(`select * from hoods`, []);
 
   return json({ hoods });
 };
 
-const Hood = (props) => {
+interface IHood {
+  name: string;
+  description: string;
+}
+
+interface IHoodProps extends IHood {}
+
+const Hood = (props: IHoodProps) => {
   return (
     <li className="hood-list__item">
       <Link to={`/${props.name}`} className="hood-list__link">
@@ -24,8 +31,12 @@ const Hood = (props) => {
   );
 };
 
+interface IHoodsData {
+  hoods: IHood[];
+}
+
 export default function Hoods() {
-  const { hoods } = useLoaderData();
+  const { hoods } = useLoaderData<IHoodsData>();
 
   return (
     <ul className="hood-list__container">

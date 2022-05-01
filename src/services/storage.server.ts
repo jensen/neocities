@@ -4,7 +4,8 @@ import {
   GetObjectCommand,
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
-import type { Stream } from "stream";
+import type { Readable } from "stream";
+import { toReadableStream } from "~/utils/convert";
 
 const storageConfig = {
   endpoint: process.env.STORAGE_ENDPOINT,
@@ -15,16 +16,7 @@ const storageConfig = {
   },
 };
 
-const convertStreamToString = (stream: Stream): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("error", reject);
-    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-  });
-
-export const stream = async (key: string, stream) => {
+export const stream = async (key: string, stream: ReadableStream) => {
   const client = new S3Client(storageConfig);
 
   await client.send(
@@ -48,7 +40,7 @@ export const upload = async (key: string, content: string) => {
   );
 };
 
-export const download = async (key: string): Promise<string> => {
+export const download = async (key: string): Promise<ReadableStream> => {
   const client = new S3Client(storageConfig);
 
   const response = await client.send(
@@ -66,7 +58,7 @@ export const download = async (key: string): Promise<string> => {
     throw new Error("Response has no body");
   }
 
-  return await convertStreamToString(response.Body as Stream);
+  return await toReadableStream(response.Body as Readable);
 };
 
 export const list = async (key: string) => {

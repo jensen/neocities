@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import storage from "~/services/storage.server";
 import { getAddress } from "~/services/db.server";
 import { userSession } from "~/services/session.server";
-import { addTargetTop } from "~/utils/convert";
+import { addTargetTop, convertStreamToString } from "~/utils/convert";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (isNaN(Number(params.address))) {
@@ -34,7 +34,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const content = await storage.download(`${address.id}/index.html`);
 
-  const preview = user.id === address.owner ? addTargetTop(content) : content;
+  const converted = await convertStreamToString(content);
+  const preview =
+    user.id === address.owner ? addTargetTop(converted) : converted;
 
   return new Response(preview, {
     status: 200,

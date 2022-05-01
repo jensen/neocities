@@ -160,7 +160,13 @@ export default function Editor() {
         >
           <label>
             <UploadIcon className="cursor-pointer" />
-            <input type="file" name="files" multiple className="hidden" />
+            <input
+              type="file"
+              name="files"
+              multiple
+              accept="text/html,image/gif,image/jpeg"
+              className="hidden"
+            />
           </label>
           <button type="submit" className="editor__button">
             Upload

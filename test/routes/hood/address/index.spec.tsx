@@ -83,7 +83,14 @@ describe("/$hood/$address/", () => {
         id: "abc-123",
         owner: "xyz-789",
       });
-      storageMock.download.mockResolvedValueOnce("<h1>Header</h1>");
+      storageMock.download.mockResolvedValueOnce(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(Buffer.from("<h1>Header</h1>", "utf-8"));
+            controller.close();
+          },
+        })
+      );
 
       const request = new Request("https://host/Page/1000?raw=true");
 

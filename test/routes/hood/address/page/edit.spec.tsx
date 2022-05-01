@@ -188,7 +188,14 @@ describe("/$hood/$address/$page/edit", () => {
 
     it("returns a 200 response when the user owns the page", async () => {
       dbMock.getOwnedAddress.mockResolvedValueOnce({ id: "abc-123" });
-      storageMock.download.mockResolvedValueOnce("<h1>Header</h1>");
+      storageMock.download.mockResolvedValueOnce(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(Buffer.from("<h1>Header</h1>", "utf-8"));
+            controller.close();
+          },
+        })
+      );
       storageMock.list.mockResolvedValueOnce(["index.html"]);
 
       const request = new Request("/Page/1000/index.html/edit", {

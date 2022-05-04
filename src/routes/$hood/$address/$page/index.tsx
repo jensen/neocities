@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const body = await request.formData();
 
-  const filename = body.get("filename");
+  const filename = (body.get("filename") as string).replace(".html", "");
 
   if (files?.includes(`${filename}.html`)) {
     throw new Response("File is duplicate.", {

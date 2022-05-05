@@ -1,8 +1,26 @@
 .hood-list__container {
   padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+@media screen and (min-width: 720px) {
+  .hood-list__container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .hood-list__container {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .hood-list__container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 }
 
 .hood-list__item {

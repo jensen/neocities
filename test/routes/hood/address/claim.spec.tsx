@@ -8,10 +8,11 @@ import { vi } from "vitest";
 import { action } from "~/routes/$hood/$address/claim";
 import { getSession, commitSession } from "~/services/session.server";
 
-import db from "~/services/db.server";
+import * as db from "~/services/db.server";
 import storage from "~/services/storage.server";
 
-const dbMock = db as unknown as SpyInstance;
+const dbMock = { query: db.query as unknown as SpyInstance };
+
 const storageMock = {
   upload: storage.upload as unknown as SpyInstance,
 };
@@ -42,7 +43,7 @@ describe("/$hood/$address/claim", () => {
       });
 
       vi.mock("~/services/db.server.ts", () => ({
-        default: vi.fn(),
+        query: vi.fn(),
       }));
 
       vi.mock("~/services/storage.server.ts", () => ({
@@ -52,7 +53,7 @@ describe("/$hood/$address/claim", () => {
       }));
 
       it("throws a 403 response when the address is already owned", async () => {
-        dbMock.mockResolvedValueOnce([]);
+        dbMock.query.mockResolvedValueOnce([]);
 
         const request = new Request("/Page/1000/claim", {
           method: "post",
@@ -71,7 +72,7 @@ describe("/$hood/$address/claim", () => {
       });
 
       it("throws a 500 response when the page upload fails", async () => {
-        dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+        dbMock.query.mockResolvedValueOnce([{ id: "abc-123" }]);
         storageMock.upload.mockRejectedValueOnce(undefined);
 
         const request = new Request("/Page/1000/claim", {
@@ -91,7 +92,7 @@ describe("/$hood/$address/claim", () => {
       });
 
       it("redirects on successful save", async () => {
-        dbMock.mockResolvedValueOnce([{ id: "abc-123" }]);
+        dbMock.query.mockResolvedValueOnce([{ id: "abc-123" }]);
         storageMock.upload.mockResolvedValueOnce(undefined);
 
         const request = new Request("/Page/1000/claim", {

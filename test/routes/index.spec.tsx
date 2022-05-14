@@ -6,18 +6,18 @@ import type { SpyInstance } from "vitest";
 import { vi } from "vitest";
 import { loader } from "~/routes/";
 
-import db from "~/services/db.server";
+import * as db from "~/services/db.server";
 
-const dbMock = db as unknown as SpyInstance;
+const dbMock = { query: db.query as unknown as SpyInstance };
 
 describe("/", () => {
   vi.mock("~/services/db.server.ts", () => ({
-    default: vi.fn(),
+    query: vi.fn(),
   }));
 
   describe(":loader", () => {
     it("returns 200 with ", async () => {
-      dbMock.mockResolvedValueOnce([
+      dbMock.query.mockResolvedValueOnce([
         { name: "Neighbourhood", description: "Description" },
       ]);
 

@@ -1,6 +1,6 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import db from "~/services/db.server";
+import * as db from "~/services/db.server";
 import AddressGrid from "~/components/AddressGrid";
 import classNames from "classnames";
 
@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const limit = 100;
   const cursor = Number((page - 1) * limit) + 999;
 
-  const addresses = await db(
+  const addresses = await db.query(
     `
      select
        addresses.number,

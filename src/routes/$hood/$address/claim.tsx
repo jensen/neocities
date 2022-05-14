@@ -1,7 +1,7 @@
 import type { LinksFunction, ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, useParams } from "@remix-run/react";
-import db from "~/services/db.server";
+import * as db from "~/services/db.server";
 import storage from "~/services/storage.server";
 import { userSession, error } from "~/services/session.server";
 
@@ -14,7 +14,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   error[401](!user.id);
 
-  const [address] = await db(
+  const [address] = await db.query(
     `
     with h as (
       select id from hoods where hoods.name = $2

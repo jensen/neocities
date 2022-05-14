@@ -3,14 +3,14 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-export default async function query(q: string, params: any[]) {
+export const query = async (q: string, params: any[]) => {
   const client = await pool.connect();
   const result = await client.query(q, params);
 
   client.release();
 
   return result.rows;
-}
+};
 
 export const getAddress = async (hood: string, number: string) => {
   const [address] = await query(

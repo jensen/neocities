@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import db from "~/services/db.server";
+import { query } from "~/services/db.server";
 import create from "~/services/session.server";
 
 export let action: ActionFunction = async ({ request, params, context }) => {
@@ -38,12 +38,10 @@ export let loader: LoaderFunction = async ({ request, params, context }) => {
 
   const { id, username, email, avatar } = await discord.json();
 
-  const [{ add_new_user }] = await db("SELECT add_new_user($1, $2, $3, $4)", [
-    id,
-    email,
-    username,
-    avatar,
-  ]);
+  const [{ add_new_user }] = await query(
+    "SELECT add_new_user($1, $2, $3, $4)",
+    [id, email, username, avatar]
+  );
 
   const { getSession, commitSession } = create();
 

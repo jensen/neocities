@@ -3,14 +3,23 @@ import { redirect } from "@remix-run/node";
 import { query } from "~/services/db.server";
 import create from "~/services/session.server";
 
-export let action: ActionFunction = async ({ request, params, context }) => {
+export let action: ActionFunction = async () => {
   return redirect("/");
 };
 
-export let loader: LoaderFunction = async ({ request, params, context }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   const code = new URL(request.url).searchParams.get("code");
 
   if (!code) return new Response(null, { status: 401 });
+
+  if (!process.env.DISCORD_CLIENT_ID)
+    return new Response(null, { status: 500 });
+
+  if (!process.env.DISCORD_CLIENT_SECRET)
+    return new Response(null, { status: 500 });
+
+  if (!process.env.DISCORD_REDIRECT_URI)
+    return new Response(null, { status: 500 });
 
   const body = new URLSearchParams({
     client_id: process.env.DISCORD_CLIENT_ID,
@@ -28,7 +37,7 @@ export let loader: LoaderFunction = async ({ request, params, context }) => {
     },
   });
 
-  const { access_token, expires_in, refresh_token } = await token.json();
+  const { access_token } = await token.json();
 
   const discord = await fetch("https://discord.com/api/users/@me", {
     headers: {

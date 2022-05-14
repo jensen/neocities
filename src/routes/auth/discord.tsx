@@ -1,15 +1,13 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 
-if (typeof process.env.DISCORD_CLIENT_ID !== "string") {
-  throw new Error("Must declare DISCORD_CLIENT_ID");
-}
-
-if (typeof process.env.DISCORD_REDIRECT_URI !== "string") {
-  throw new Error("Must declare DISCORD_REDIRECT_URI");
-}
-
 export let loader: LoaderFunction = async () => {
+  if (!process.env.DISCORD_CLIENT_ID)
+    return new Response(null, { status: 500 });
+
+  if (!process.env.DISCORD_REDIRECT_URI)
+    return new Response(null, { status: 500 });
+
   const search = new URLSearchParams({
     response_type: "code",
     client_id: process.env.DISCORD_CLIENT_ID,

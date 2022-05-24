@@ -147,8 +147,10 @@ describe("/$hood/$address/upload", () => {
       });
 
       expect(storageMock.stream).toBeCalledTimes(1);
-      expect(storageMock.stream.calls[0][0]).toBe("abc-123/index.html");
-      expect(storageMock.stream.calls[0][1]).toBeInstanceOf(Readable);
+      expect(storageMock.stream).toBeCalledWith(
+        "abc-123/index.html",
+        expect.any(Readable)
+      );
 
       expect(response.status).toBe(302);
       expect(response.headers.get("Location")).toBe("/Page/1000/");

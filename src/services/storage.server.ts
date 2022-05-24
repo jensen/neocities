@@ -16,7 +16,7 @@ const storageConfig = {
   },
 };
 
-export const stream = async (key: string, stream: ReadableStream) => {
+export const stream = async (key: string, stream: Readable) => {
   const client = new S3Client(storageConfig);
 
   await client.send(

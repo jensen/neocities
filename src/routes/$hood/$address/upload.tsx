@@ -31,7 +31,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     name,
     stream,
   }) => {
-    debugger;
     if (name !== "files") {
       throw new Error("Name must be 'files'.");
     }
